@@ -1,1 +1,3 @@
 climate-learn
+IPython
+torch
