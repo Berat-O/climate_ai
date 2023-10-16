@@ -12,7 +12,3 @@ cl.data.download_weatherbench(
     dataset="era5",
     variable="geopotential_500"
 )
-
-
-
-
