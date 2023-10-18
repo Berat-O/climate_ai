@@ -1,6 +1,6 @@
 # Climate AI Project
 
-Welcome to the Climate AI project! This repository is designed to help you get started with climate-related machine learning and analysis.
+Welcome to the Climate AI project! This repository is designed for Naval Architecture and Marine Engineering Graduation Thesis
 
 ## Table of Contents
 - [Project Description](#project-description)
