@@ -26,9 +26,6 @@ dftrain['DateTime'] = pd.to_datetime(dftrain['DateTime'], format="%d.%m.%Y") #co
 indexedDataset = dftrain.set_index(['DateTime'])
 
 
-
-
-
 # Plot the data
 plt.xlabel('Date')
 plt.ylabel('Temp')
@@ -40,7 +37,7 @@ plt.plot(indexedDataset)
 #Determine rolling statistics
 rolmean = indexedDataset.rolling(window=12).mean() #window size 12 denotes 12 months, giving rolling mean at yearly level
 rolstd = indexedDataset.rolling(window=12).std()
-print(rolmean,rolstd)
+#print(rolmean,rolstd)
 
 #Plot rolling statistics
 orig = plt.plot(indexedDataset, color='blue', label='Original')
@@ -52,17 +49,19 @@ plt.title('Rolling Mean & Standard Deviation')
 
 
 #Perform Augmented Dickey–Fuller test:
-print('Results of Dickey Fuller Test:')
+#print('Results of Dickey Fuller Test:')
 dftest = adfuller(indexedDataset['MaxTemp'], autolag='AIC')
 
 dfoutput = pd.Series(dftest[0:4], index=['Test Statistic','p-value','#Lags Used','Number of Observations Used'])
 for key,value in dftest[4].items():
     dfoutput['Critical Value (%s)'%key] = value
     
-print(dfoutput)
+#print(dfoutput)
 
 #Estimating trend
-indexedDataset_logScale = np.log(indexedDataset)
+offset = 1e-10  # A small positive constant
+indexedDataset_logScale = np.log(np.abs(indexedDataset) + offset)
+print(indexedDataset_logScale)
 plt.plot(indexedDataset_logScale)
 #plt.show()
 
@@ -111,16 +110,14 @@ plt.plot(indexedDataset_logScale)
 plt.plot(exponentialDecayWeightedAverage, color='red')
 #plt.show()
 
-# crate error
 datasetLogScaleMinusExponentialMovingAverage = indexedDataset_logScale - exponentialDecayWeightedAverage
-datasetLogScaleMinusExponentialMovingAverage.dropna(inplace=True)
+test_stationarity(datasetLogScaleMinusExponentialMovingAverage)
 
 datasetLogDiffShifting = indexedDataset_logScale - indexedDataset_logScale.shift()
 plt.plot(datasetLogDiffShifting)
-#plt.show()
 
-
-
+datasetLogDiffShifting.dropna(inplace=True)
+test_stationarity(datasetLogDiffShifting)
 
 
 
